@@ -1,0 +1,4 @@
+{
+  "serviceURL":"https://3kdbq6bogk.execute-api.us-east-2.amazonaws.com/dev/pokemons",
+  "authenticationURL": "https://ktj25.auth.us-east-2.amazoncognito.com/login?response_type=token&client_id=3mif3kih295l65pno2qggbr5ct&redirect_uri=http://localhost:3000/home.html"
+}

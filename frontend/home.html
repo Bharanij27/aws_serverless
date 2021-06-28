@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pokemon Go</title>
+    <style>
+        body{
+            padding: 0;
+            margin: 0;
+            height: max-content;
+        }
+      #call-result{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        height: 100%;
+        min-height: 100vh;
+        align-items: center;
+        background-color: #eaeaea;
+      }
+      .card {
+          display: flex;
+          margin: 3rem 1rem;
+          box-shadow: 0 18px 20px 0 rgba(4, 3, 3, 0.2);
+          border-radius: 20px;
+          padding: 2rem;
+          width: 20%;
+          background-color: #fff;
+      }
+      .card-img-container {
+        margin-right: 1rem;
+      }
+      .card-title {
+        font-size: 1.5rem;
+        margin: 0;
+        text-transform: capitalize;
+      }
+      .card-img {
+        width: 100px;
+        height: 100px;
+      }
+    </style>
+</head>
+  <body>
+    <div id="call-result">Loading.... Please wait</div>
+    <script>
+
+      let config = undefined
+      let id_token = undefined
+  
+      function preparePage(){
+  
+        id_token = getIDToken()
+        if(id_token !== undefined) {
+          fetch('./config.json').then(res => res.json())
+          .then((configJson) => {
+            config = configJson
+            callService();
+          }).catch(err => console.error(err))
+        }
+        else window.location.replace("http://localhost:3000/");
+      }
+  
+      function getIDToken(){
+        let url = new URL(location.href)
+        let this_id_token = undefined
+  
+        url.hash.substr(1).split('&').some(
+          function(keyValueString){
+            let keyValueArray = keyValueString.split('=')
+            if(keyValueArray[0]==="id_token"){
+              this_id_token = keyValueArray[1]
+              return true
+            }
+          }
+        )
+  
+        return this_id_token
+      }
+  
+      function callService(){
+        let serviceURL = config['serviceURL']
+  
+        console.log('calling service witj id token: ' + serviceURL)
+  
+        fetch(serviceURL,
+          {
+            credentials: 'include',
+            headers: {
+              'Authorization': id_token
+            }
+          }).then(res => res.json())
+          .then((pokemonJson) => {
+              let resultContainer = document.getElementById('call-result');
+              resultContainer.innerText = '';
+              pokemonJson.result.forEach(pokemon => {
+                  document.getElementById('call-result').innerHTML += createCard(pokemon)
+                });
+          }).catch(err => {
+            window.location.replace('http://localhost:3000/')
+        })
+      }
+
+      function createCard(pokemon){
+        return `<div class="card">
+            <div class="card-img-container">
+            <img src="${pokemon.imgUrl}" class="card-img" alt="pokemon-img">
+            </div>
+            <div class="card-body">
+            <div class="card-data">
+                <h5 class="card-title">Name : ${pokemon.name}</h5>
+                <p class="card-text">Height : ${pokemon.height}</p>
+                <p class="card-text">Weight : ${pokemon.weight}</p>
+            </div>
+            </div>
+        </div>`
+      }
+
+      preparePage();  
+  </script>
+  </body>
+</html>

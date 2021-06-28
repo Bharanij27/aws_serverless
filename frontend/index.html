@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon Go</title>
+    <style>
+        body{
+            background-image: url(https://external-preview.redd.it/-IdqCYSKgPZWsnB1Lf7ppci98a-M8If40X0HHAUQJJs.jpg?auto=webp&s=2fb9ad640aeaa10dbb8976a23a6b5f4bf7301dd8);
+            height: 100vh;
+            background-repeat: no-repeat;
+            background-size: cover;
+            overflow: hidden;
+        }
+        .container{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+        .button {
+            font-family: 'Nunito', sans-serif;
+            font-size: 22px;
+            text-transform: uppercase;
+            letter-spacing: 1.3px;
+            font-weight: 700;
+            color: #313133;
+            background: #e4d617;
+            /* background: linear-gradient(90deg, rgba(129,230,217,1) 0%, rgba(79,209,197,1) 100%); */
+            border: none;
+            border-radius: 1000px;
+            box-shadow: 12px 12px 24px rgb(238, 230, 121);
+            transition: all 0.3s ease-in-out 0s;
+            cursor: pointer;
+            outline: none;
+            position: relative;
+            padding: 1rem 3.7rem;
+            text-decoration: none;
+        }
+
+        .button::before {
+            content: '';
+            border-radius: 1000px;
+            min-width: 312px;
+            min-height: 72px;
+            border: 6px solid #ffee00;
+            box-shadow: 0 0 60px rgb(238, 230, 121);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: ease-in-out;
+        }
+
+        .button:hover, .button:focus {
+            transform: translateY(-6px);
+        }
+
+        .button:hover::before{
+            opacity: 1;
+        }
+</style>
+</head>
+<body>
+    <div class="container">
+        <a class="button" id="authentication-link">Pokemon Go</a>
+    </div>
+    <script>
+        fetch('./config.json').then(res => res.json())
+        .then((configJson) => {
+            let config = configJson
+            prepareAuthenticationLink(config['authenticationURL'])
+        }).catch(err => console.error(err))
+
+        function prepareAuthenticationLink(authenticationURL) {
+            let authLink = document.getElementById('authentication-link')
+            authLink.href = authenticationURL
+        }
+    </script>
+</body>
+</html>
